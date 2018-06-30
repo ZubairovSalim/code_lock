@@ -192,7 +192,7 @@ function sendNotification(notification) {
 
     messaging.getToken()
         .then(function(currentToken) {
-            fetch('https://fcm.googleapis.com/fcm/send', {
+            fetch('https://fcm.googleapis.com/fcm/send/' + currentToken + '/topics/codelocktopic', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'key=' + key,
