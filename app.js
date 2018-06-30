@@ -163,6 +163,7 @@ function getToken() {
                     if (currentToken) {
                         sendTokenToServer(currentToken);
                         updateUIForPushEnabled(currentToken);
+                        subscribeTokenToTopic(currentToken, 'codelocktopic');
                     } else {
                         showError('No Instance ID token available. Request permission to generate one');
                         updateUIForPushPermissionRequired();
@@ -180,6 +181,22 @@ function getToken() {
         });
 }
 
+function subscribeTokenToTopic(token, topic) {
+    fetch('https://iid.googleapis.com/iid/v1/'+token+'/rel/topics/'+topic, {
+      method: 'POST',
+      headers: new Headers({
+        'Authorization': 'key='+ 'AAAAYWd73A8:APA91bFd3IHKTJEy22XQRlWsQxqjN3O_hjGhcL-WcchbyXYXA_2Q7NZGZoRy5T2Kn_P93gob_14-1sfJgRmZoC6q46MlZzN381QMAscIrHrAsR7vLMZivfEWXDaAc1COVplVtGGK3kX5UaUZ90b6vpmFIKo2hCRizg'
+      })
+    }).then(response => {
+      if (response.status < 200 || response.status >= 400) {
+        throw 'Error subscribing to topic: '+response.status + ' - ' + response.text();
+      }
+      console.log('Subscribed to "'+topic+'"');
+    }).catch(error => {
+      console.error(error);
+    })
+  }
+
 
 function sendNotification(notification) {
     var key = 'AAAAYWd73A8:APA91bFd3IHKTJEy22XQRlWsQxqjN3O_hjGhcL-WcchbyXYXA_2Q7NZGZoRy5T2Kn_P93gob_14-1sfJgRmZoC6q46MlZzN381QMAscIrHrAsR7vLMZivfEWXDaAc1COVplVtGGK3kX5UaUZ90b6vpmFIKo2hCRizg';
@@ -192,7 +209,7 @@ function sendNotification(notification) {
 
     messaging.getToken()
         .then(function(currentToken) {
-            fetch('https://fcm.googleapis.com/fcm/send/' + currentToken + '/topics/codelocktopic', {
+            fetch('https://fcm.googleapis.com/fcm/send/', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'key=' + key,
