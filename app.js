@@ -9,6 +9,7 @@ var token = $('#token');
 var form = $('#notification');
 var massage_id = $('#massage_id');
 var massage_row = $('#massage_row');
+var hide_form = $('#test_data');
 
 var info = $('#info');
 var info_message = $('#info-message');
@@ -34,6 +35,7 @@ function addZero(i) {
 
 setNotificationDemoBody();
 resetUI();
+hide_form.hide();
 
 if (
     'Notification' in window &&
